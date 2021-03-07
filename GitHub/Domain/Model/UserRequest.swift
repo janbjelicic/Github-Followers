@@ -7,10 +7,16 @@
 
 import Foundation
 
-struct UserRequest: NetworkRequest {
+struct UserRequest {
+    
+    let login: String
+    
+}
+
+extension UserRequest: NetworkRequest {
     
     var path: String {
-        return "users/janbjelicic"
+        return "users/" + login
     }
     
     var method: HttpVerb {

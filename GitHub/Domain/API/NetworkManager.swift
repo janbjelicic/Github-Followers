@@ -42,6 +42,8 @@ class NetworkManager: NetworkManagerProtocol {
             guard let self = self else {
                 return Disposables.create()
             }
+            // A different Rx implementation could use URLSession.shared.rx.json.
+            // Haven't used it myself so I decided to stick to this implementation.
             let task = self.urlSession.dataTask(with: urlRequest) { (data, error, response) in
                 do {
                     let response = try JSONDecoder().decode(T.self, from: data ?? Data())

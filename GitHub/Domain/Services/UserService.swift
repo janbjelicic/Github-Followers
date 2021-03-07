@@ -9,7 +9,7 @@ import Foundation
 import RxSwift
 
 protocol UserServiceProtocol {
-    func fetchUser() -> Observable<User>
+    func fetchUser(login: String) -> Observable<User>
     func fetchUsers() -> Observable<[User]>
 }
 
@@ -21,8 +21,8 @@ class UserService: UserServiceProtocol {
         self.networkManager = networkManager
     }
     
-    func fetchUser() -> Observable<User> {
-        let request = UserRequest()
+    func fetchUser(login: String) -> Observable<User> {
+        let request = UserRequest(login: login)
         return networkManager.request(request: request)
     }
     

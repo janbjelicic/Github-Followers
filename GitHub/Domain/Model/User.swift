@@ -21,3 +21,9 @@ struct User: Codable {
     }
     
 }
+
+extension User {
+    
+    static let example = User(login: "Test", blog: "test_blog", location: "Remote", twitterUsername: nil, name: nil)
+    
+}

@@ -13,15 +13,18 @@ class FakeNetworkManager: NetworkManagerProtocol {
     
     var path: String?
     var method: HttpVerb?
-    
-    init() {}
+    var response: Data?
     
     func request<T: Codable>(request: NetworkRequest) -> Observable<T> {
         path = request.path
         method = request.method
         
-        let users = [User]()
-        return Observable.just(users)
+        do {
+            let value = try JSONDecoder().decode(T.self, from: response!)
+            return Observable.just(value)
+        } catch {
+            return Observable.error(NetworkError.generic)
+        }
     }
     
 }

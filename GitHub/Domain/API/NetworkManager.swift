@@ -42,20 +42,31 @@ class NetworkManager: NetworkManagerProtocol {
             guard let self = self else {
                 return Disposables.create()
             }
-            // A different Rx implementation could use URLSession.shared.rx.json.
-            // Haven't used it myself so I decided to stick to this implementation.
-            let task = self.urlSession.dataTask(with: urlRequest) { (data, error, response) in
+            self.urlSession.rx.data(request: urlRequest).subscribe(onNext: { data in
                 do {
-                    let response = try JSONDecoder().decode(T.self, from: data ?? Data())
+                    let response = try JSONDecoder().decode(T.self, from: data)
                     observer.onNext(response)
                 } catch {
                     observer.onError(error)
                 }
-            }
-            task.resume()
-            return Disposables.create {
-                task.cancel()
-            }
+            }, onError: { error in
+                observer.onError(error)
+            }).disposed(by: self.disposeBag)
+            return Disposables.create()
+            // A different Rx implementation could use URLSession.shared.rx.json.
+            // Haven't used it myself so I decided to stick to this implementation.
+//            let task = self.urlSession.dataTask(with: urlRequest) { (data, error, response) in
+//                do {
+//                    let response = try JSONDecoder().decode(T.self, from: data ?? Data())
+//                    observer.onNext(response)
+//                } catch {
+//                    observer.onError(error)
+//                }
+//            }
+//            task.resume()
+//            return Disposables.create {
+//                task.cancel()
+//            }
         }
     }
     
